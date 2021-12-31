@@ -26,6 +26,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "keyboard.h"
 #include "syntax.h"
 #include "window.h"
+#include "puresize.h"
 
 /* Work around GCC bug 54561.  */
 #if GNUC_PREREQ (4, 3, 0)
@@ -1415,15 +1416,23 @@ exec_byte_code (Lisp_Object bytestr, Lisp_Object vector, Lisp_Object maxdepth,
 
 	CASE (Bsetcar):
 	  {
-	    Lisp_Object v1 = POP;
-	    TOP = Fsetcar (TOP, v1);
+	    Lisp_Object newcar = POP;
+	    Lisp_Object cell = TOP;
+	    CHECK_CONS (cell);
+	    CHECK_IMPURE (cell, XCONS (cell));
+	    XSETCAR (cell, newcar);
+	    TOP = newcar;
 	    NEXT;
 	  }
 
 	CASE (Bsetcdr):
 	  {
-	    Lisp_Object v1 = POP;
-	    TOP = Fsetcdr (TOP, v1);
+	    Lisp_Object newcar = POP;
+	    Lisp_Object cell = TOP;
+	    CHECK_CONS (cell);
+	    CHECK_IMPURE (cell, XCONS (cell));
+	    XSETCDR (cell, newcar);
+	    TOP = newcar;
 	    NEXT;
 	  }
 
