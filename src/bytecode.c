@@ -1588,10 +1588,17 @@ exec_byte_code (Lisp_Object bytestr, Lisp_Object vector, Lisp_Object maxdepth,
 
  exit:
 
+#if BYTE_CODE_SAFE || !defined NDEBUG
+  if (SPECPDL_INDEX () != count)
+    {
+      /* Binds and unbinds are supposed to be compiled balanced.  */
+      if (SPECPDL_INDEX () > count)
+	unbind_to (count, Qnil);
+      error ("binding stack not balanced (serious byte compiler bug)");
+    }
+#endif
   /* The byte code should have been properly pinned.  */
   eassert (SDATA (bytestr) == bytestr_data);
-  /* Binds and unbinds are supposed to be compiled balanced.  */
-  eassert (SPECPDL_INDEX () == count);
 
   Lisp_Object result = TOP;
   SAFE_FREE ();
