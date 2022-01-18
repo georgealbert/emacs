@@ -1434,23 +1434,23 @@ exec_byte_code (Lisp_Object bytestr, Lisp_Object vector, Lisp_Object maxdepth,
 
 	CASE (Bsetcar):
 	  {
-	    Lisp_Object newcar = POP;
+	    Lisp_Object newval = POP;
 	    Lisp_Object cell = TOP;
 	    CHECK_CONS (cell);
 	    CHECK_IMPURE (cell, XCONS (cell));
-	    XSETCAR (cell, newcar);
-	    TOP = newcar;
+	    XSETCAR (cell, newval);
+	    TOP = newval;
 	    NEXT;
 	  }
 
 	CASE (Bsetcdr):
 	  {
-	    Lisp_Object newcar = POP;
+	    Lisp_Object newval = POP;
 	    Lisp_Object cell = TOP;
 	    CHECK_CONS (cell);
 	    CHECK_IMPURE (cell, XCONS (cell));
-	    XSETCDR (cell, newcar);
-	    TOP = newcar;
+	    XSETCDR (cell, newval);
+	    TOP = newval;
 	    NEXT;
 	  }
 
